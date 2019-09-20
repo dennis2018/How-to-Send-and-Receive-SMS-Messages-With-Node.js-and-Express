@@ -77,9 +77,10 @@ nexmo.message.sendSms("Nexmo", "TO_NUMBER", text, {
 
 ```
 
-If your carrier network supports alphanumeric sender IDs, FROM can be text instead of a phone number(for my example it’s Nexmo. If your network doesn’t support alphanumeric sender IDs (for example in the US) it has to be a phone number.
+If your carrier network supports alphanumeric sender IDs, FROM can be text instead of a phone number(for my example it’s DENNISMBURUTECH. If your network doesn’t support alphanumeric sender IDs (for example in the US) it has to be a phone number.
 
 Depending on the country you’re trying to send the SMS to, there are regulations that require you to own the phone number you’re sending the SMS from, so you’ll have to buy a Nexmo phone number. You can do so in the Nexmo Dashboard or via the CLI:
 
-
- 
+```
+ $ nexmo number:buy  --country_code US --confirm
+```
