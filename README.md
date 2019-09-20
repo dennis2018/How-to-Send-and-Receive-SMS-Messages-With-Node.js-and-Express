@@ -114,7 +114,8 @@ After ngrok runs, it will give you a random-looking URL, that we’ll use as the
 
 To interact with the Messages API, we’ll need to create a messages application on the Nexmo platform to authenticate our requests. Think of applications more like containers, metadata to group all your data on the Nexmo platform. We’ll create one using the Nexmo Dashboard, and that needs a name, and inbound URL and a status URL.
 
-[https://res.cloudinary.com/practicaldev/image/fetch/s--m2AtfgAK--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://www.nexmo.com/wp-content/uploads/2019/09/create-messages-application.gif]
+![Image description](https://res.cloudinary.com/practicaldev/image/fetch/s--m2AtfgAK--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://www.nexmo.com/wp-content/uploads/2019/09/create-messages-application.gif)
+
 
 We’ll also save a keyfile on disk. Applications work on a public / private key system, so when you create an application, a public key is generated and kept with Nexmo, and a private key is generated, not kept with Nexmo, and returned to you via the creation of the application. We’ll use the private key to authenticate our library calls later on.
 
