@@ -103,3 +103,9 @@ $ npm install nexmo@beta
 
 If you haven’t used ngrok before, there is a blog post that explains how to use it. If you’re familiar with ngrok, run it with http on the 3000 port.
 
+
+```
+$ ngrok http 3000
+```
+
+After ngrok runs, it will give you a random-looking URL, that we’ll use as the base for our Webhooks later on. Mine looks like this: http://5b5c1bd0.ngrok.io.
