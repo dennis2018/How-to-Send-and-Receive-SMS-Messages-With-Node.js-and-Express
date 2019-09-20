@@ -109,3 +109,16 @@ $ ngrok http 3000
 ```
 
 After ngrok runs, it will give you a random-looking URL, that we’ll use as the base for our Webhooks later on. Mine looks like this: http://5b5c1bd0.ngrok.io.
+
+## Create a Messages Application
+
+To interact with the Messages API, we’ll need to create a messages application on the Nexmo platform to authenticate our requests. Think of applications more like containers, metadata to group all your data on the Nexmo platform. We’ll create one using the Nexmo Dashboard, and that needs a name, and inbound URL and a status URL.
+
+We’ll also save a keyfile on disk. Applications work on a public / private key system, so when you create an application, a public key is generated and kept with Nexmo, and a private key is generated, not kept with Nexmo, and returned to you via the creation of the application. We’ll use the private key to authenticate our library calls later on.
+
+Use the ngrok URL you got in the previous step and fill in the fields, appending /webhooks/status and /webhooks/inbound, for the respective fields. When a message is coming to the Messages API, the data about the message is sent to the inbound URL. When you send a message with the API, the data about the message status gets sent to the status URL.
+
+Create Nexmo Messages Application
+Initialize Dependencies
+
+Let’s replace the contents of the file we created earlier. We need to initialize the Nexmo node library we installed earlier, in the index.js file you created:
