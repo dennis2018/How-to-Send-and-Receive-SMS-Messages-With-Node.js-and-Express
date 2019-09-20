@@ -18,6 +18,14 @@ Before you begin, make sure you have:
 ## Send an SMS Message With the SMS API
 
 The SMS API is the first Nexmo API, and we’ll use it to send an SMS message to your phone number.
-Install Node.js Dependencies
+
+## Install Node.js Dependencies
 
 First off, initialize an NPM package, otherwise, older versions of NPM will complain about installing a package without having a package.json first. Just use the defaults for init, and then install the nexmo Node.js package.
+
+```
+$ npm init
+$ npm install nexmo
+
+```
+
