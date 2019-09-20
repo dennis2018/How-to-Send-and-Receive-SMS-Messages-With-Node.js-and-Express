@@ -84,3 +84,22 @@ Depending on the country you’re trying to send the SMS to, there are regulatio
 ```
  $ nexmo number:buy  --country_code US --confirm
 ```
+
+You can run the code and receive the SMS message with:
+
+```
+$ node index.js
+```
+
+## Send an SMS Message With the New Messages API
+
+There is a newer Nexmo API that deals with sending text messages called the Messages API. It is a multi-channel API, that can send a message via different channels, such as SMS, Facebook Messenger, Viber, and Whatsapp. The API is in Beta right now, so if we want to use it to send the same SMS message, we’ll need to install the beta version of the Nexmo node library.
+
+```
+$ npm install nexmo@beta
+```
+
+## Run ngrok
+
+If you haven’t used ngrok before, there is a blog post that explains how to use it. If you’re familiar with ngrok, run it with http on the 3000 port.
+
