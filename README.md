@@ -50,3 +50,36 @@ const nexmo = new Nexmo({
 ```
 
 Replace the values in there with your actual API key and secret. You can find those on the “Getting Started” page in the Nexmo Dashboard.
+
+## Send the SMS Message
+The Nexmo library has a method for sending the SMS with the SMS API, and that’s nexmo.message.sendSms. The method takes as parameters 3 strings and an object: the Nexmo number from which to send the SMS, the phone number where to deliver the SMS, the text of the message and options for the SMS encoding. It also accepts a callback that gets called when the API request is done.
+
+The response data contains an array for all the messages that were sent, with information about their status. In most cases, it’s going to be 1 element in that array, but if the SMS was longer than 160 characters, it gets split into a multipart SMS, and then the array contains data about each part sent. If the status of the message is 0, the SMS was sent successfully, otherwise, the error data for the message is on the error-text property of the message.
+
+Because my text has an emoji in it, I’m setting the type unicode in the options object, otherwise, that emoji is going to be sent on the network as ?.
+
+```
+let text = "👋Hello from Nexmo";
+ 
+nexmo.message.sendSms("Nexmo", "TO_NUMBER", text, {
+  type: "unicode"
+}, (err, responseData) => {
+  if (err) {
+    console.log(err);
+  } else {
+    if (responseData.messages[0]['status'] === "0") {
+      console.log("Message sent successfully.");
+    } else {
+      console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+    }
+  }
+})
+
+```
+
+If your carrier network supports alphanumeric sender IDs, FROM can be text instead of a phone number(for my example it’s Nexmo. If your network doesn’t support alphanumeric sender IDs (for example in the US) it has to be a phone number.
+
+Depending on the country you’re trying to send the SMS to, there are regulations that require you to own the phone number you’re sending the SMS from, so you’ll have to buy a Nexmo phone number. You can do so in the Nexmo Dashboard or via the CLI:
+
+
+ 
