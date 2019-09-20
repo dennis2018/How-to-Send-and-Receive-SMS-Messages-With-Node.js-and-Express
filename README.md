@@ -2,7 +2,7 @@
 
 [![GitHub Issues](https://img.shields.io/github/issues/IgorAntun/node-chat.svg)](https://github.com/dennis2018/How-to-Send-and-Receive-SMS-Messages-With-Node.js-and-Express/network/alerts) [![Current Version](https://img.shields.io/badge/version-1.0.7-green.svg)](https://github.com/IgorAntun/node-chat) 
 
-### This article originally appeared on the Nexmo blog, but I wanted to add some more content to it especially for the DENNISMBURUTECH community.
+### This series originally appeared on the Nexmo blog, but I wanted to add some more content to it especially for the DENNISMBURUTECH community.
 
 Nexmo has a couple of APIs that allow you to send and receive a high volume of SMS anywhere in the world. Once you get your virtual phone number, you can use the APIs to manage outbound messages (“sending”) and inbound messages (“receiving”). In this article, you will learn how to send and receive SMS messages with Node.js and Express.
 
@@ -38,3 +38,15 @@ $ touch index.js
 
 ```
 
+We need to initialize the Nexmo node library we installed earlier, in the index.js file you created:
+
+```
+const Nexmo = require('nexmo')
+ 
+const nexmo = new Nexmo({
+  apiKey: NEXMO_API_KEY,
+  apiSecret: NEXMO_API_SECRET
+})
+```
+
+Replace the values in there with your actual API key and secret. You can find those on the “Getting Started” page in the Nexmo Dashboard.
