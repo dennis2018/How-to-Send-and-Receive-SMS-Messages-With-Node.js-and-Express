@@ -29,3 +29,12 @@ $ npm install nexmo
 
 ```
 
+## Initialize Dependencies
+
+We’ll create a new JavaScript file, let’s call it index.js.
+
+```
+$ touch index.js
+
+```
+
