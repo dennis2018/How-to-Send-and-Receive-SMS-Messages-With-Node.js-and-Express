@@ -174,3 +174,151 @@ You can run the code and receive the SMS message with:
 ```	
 $ node index.js
 ```
+
+That’s it, you’ve sent the same SMS message using two different Nexmo APIs. You’ll notice the Messages API is a lot more verbose in usage, while both APIs need just one method to accomplish the same thing.
+
+## Receive SMS Messages
+
+When a Nexmo phone number receives an SMS message, Nexmo will pass that message to a Webhook you have specified in the Nexmo dashboard. In order to set up the webhook URL, go to the little gear icon next to your phone numbers in the Nexmo Dashboard and fill in the “Inbound Webhook URL” field with YOUR_NGROK_URL/webhooks/inbound. Don’t forget to replace your actual ngrok URL.
+
+![Image description](https://res.cloudinary.com/practicaldev/image/fetch/s--fVtRY600--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://www.nexmo.com/wp-content/uploads/2019/09/set-inbound-webhook.gif)
+
+## Create a Web Server
+
+We’ll be creating our webserver using express because it’s one of the most popular and easy to use Node.js frameworks for this purpose. We’ll also be looking at the request bodies for the inbound URL, so we’ll need to install body-parser as well as express from npm.
+
+```
+$ npm install express body-parser
+```
+
+Let’s create a new file for this, call it server.js:
+
+```
+$ touch server.js
+```
+
+We’ll create a basic express application, that uses the JSON parser from bodyParser and sets the urlencoded option to true. Let’s fill out the server.js file we created. We’ll use the port 3000 for the server to listen to, we already have ngrok running on port 3000.
+
+```
+const app = require('express')()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.listen(3000)
+```
+
+## Create Webhook for the Inbound URL
+
+For the inbound URL, we’re going to create a post handler for /webhooks/inbound, and we’ll just log the request body to the console. Because Nexmo has a retry mechanism, it’s going to keep resending the message if the URL doesn’t respond with 200 OK, so we’ll send back a 200 status.
+
+```
+app.post('/webhooks/inbound-message', (req, res) => {
+  console.log(req.body);
+
+  res.status(200).end();
+});
+```
+
+You can run the code with:
+
+```
+$ node server.js
+```
+
+## Try It Out
+
+Now send an SMS message from your phone to your Nexmo number. You should see the message being logged in the terminal window where you ran the code. It looks similar to this:
+
+![Image description](https://res.cloudinary.com/practicaldev/image/fetch/s--y58M5280--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://www.nexmo.com/wp-content/uploads/2019/09/receive-sms-terminal.png)
+
+
+I hope it worked and you’ve just learned how to send and receive SMS messages with the Nexmo APIs and Node.js.
+
+## Autoresponder
+
+One of the most common use cases for sending and receiving SMS messages is an autoresponder. I wanted to take this example a step further, so let's build an SMS autoresponder with the things you just learned. If you combine the two things you've learned so far, together in the inbound Webhook, you have an SMS autoresponder, that replies with and SMS to all the incoming SMS messages.
+
+```
+app.post('/webhooks/inbound', (req, res) => {
+  console.log(req.body);
+
+  nexmo.channel.send(
+    { "type": "sms", "number": req.body.msisdn },
+    { "type": "sms", "number": req.body.to },
+    {
+      "content": {
+        "type": "text",
+        "text": text
+      }
+    },
+    (err, responseData) => {
+      if (err) {
+        console.log("Message failed with error:", err);
+      } else {
+        console.log(`Message ${responseData.message_uuid} sent successfully.`);
+      }
+    }
+  );
+
+  res.status(200).end();
+});
+```
+
+Since I'm a fan of the NumbersAPI, I thought I'd use it for the autoresponder as well. I want to change the autoresponder to check if the text in the incoming SMS message is a number, and then use it to get a fact about that number from the Numbers API. Once I have a fact, I'll send that back with the SMS message.
+
+First, we'll need to install an HTTP requests library, I'm not a fan of the default http one in Node.js. Coincidentally, it's called request, so let's install it via npm:
+
+```
+$ npm install request
+
+```
+
+We'll make a request to http://numbersapi.com/${number} every time there is a POST request on the /webhooks/inbound endpoint, where number is going to be the number in the SMS we received. We'll need to parse the text into an integer. I'll default it to 42 instead of 0 because 42 is the meaning of life.
+
+Let's update the /webhooks/inbound route to make a request to the NumbersAPI before replying to the incoming SMS.
+
+
+```
+app.post('/webhooks/inbound', (req, res) => {
+  console.log(req.body)
+
+  var number = parseInt(req.body.text) || 42;
+
+  request(`http://numbersapi.com/${number}`, (error, response, body) => {
+    if (error) {
+      text = "The Numbers API has thrown an error."
+    } else {
+      text = body
+    }
+
+    nexmo.channel.send(
+      { "type": "sms", "number": req.body.msisdn },
+      { "type": "sms", "number": req.body.to },
+      {
+        "content": {
+          "type": "text",
+          "text": text
+        }
+      },
+      (err, responseData) => {
+        if (err) {
+          console.log("Message failed with error:", err);
+        } else {
+          console.log(`Message ${responseData.message_uuid} sent successfully.`);
+        }
+      }
+    );
+
+    res.status(200).end();
+  })
+});
+
+```
+
+## Try It Out
+
+For reference, your final server.js file should look something like this one. If you've followed along this long, you'll need to restart your server by running node server.js again in your terminal, and you're good to go. Send an SMS message with a number to your Nexmo phone number and start interacting with your autoresponder.
+
+## happy coding
