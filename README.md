@@ -126,4 +126,51 @@ Initialize Dependencies
 
 Let’s replace the contents of the file we created earlier. We need to initialize the Nexmo node library we installed earlier, in the index.js file you created:
 
+```
+const Nexmo = require('nexmo')
 
+const nexmo = new Nexmo({
+  apiKey: NEXMO_API_KEY,
+  apiSecret: NEXMO_API_SECRET,
+  applicationId: NEXMO_APPLICATION_ID,
+  privateKey: NEXMO_APPLICATION_PRIVATE_KEY_PATH
+})
+```
+
+Replace the values in there with your actual API key and secret, the application id for the application you just created earlier, and the path to the private key you saved.
+
+
+## Send the Same SMS Message
+
+In order to send an SMS message with the Messages API, we’ll use the nexmo.channel.send method from the beta version of the Nexmo node library. The method accepts objects as parameters, with information about the recipient, sender, and content. They vary for the different channels, you’ll need to check the API documentation for the other channels mentioned.
+
+For SMS, the type of recipient and sender is sms, and the object has to contain a number property as well. The content object accepts a type of text and a text message. The callback returns an error and response object, and we’ll log messages about the success or failure of the operation.
+
+```
+let text = "👋Hello from Nexmo";
+ 
+nexmo.channel.send(
+  { "type": "sms", "number": "TO_NUMBER" },
+  { "type": "sms", "number": "Nexmo" },
+  {
+    "content": {
+      "type": "text",
+      "text": text
+    }
+  },
+  (err, responseData) => {
+    if (err) {
+      console.log("Message failed with error:", err);
+    } else {
+      console.log(`Message ${responseData.message_uuid} sent successfully.`);
+    }
+  }
+);
+```
+
+You can run the code and receive the SMS message with:
+
+
+```	
+$ node index.js
+```
